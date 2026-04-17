@@ -1,11 +1,112 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Youtube, Video, Instagram, Download, Flame, ChevronRight } from 'lucide-react';
-import { profileData, socialLinks, freeResource, futureProducts, finalCTA } from '../data/mock';
+import axios from 'axios';
+
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+const API = `${BACKEND_URL}/api`;
+
+// Static data (no longer using mock.js)
+const profileData = {
+  name: "Tealor Mode",
+  avatar: "https://customer-assets.emergentagent.com/job_bio-link-fitness/artifacts/7toccjzq_ChatGPT%20Image%2017%20abr%202026%2C%2013_14_49.png",
+  bio: "Elimina grasa rebelde. Construye un físico real.",
+  tagline: "Transformación basada en ciencia y consistencia"
+};
+
+const socialLinks = [
+  {
+    id: 1,
+    platform: "YouTube",
+    label: "Ver vídeos en YouTube",
+    url: "https://www.youtube.com/@TealorMode",
+    icon: "youtube"
+  },
+  {
+    id: 2,
+    platform: "TikTok",
+    label: "Contenido diario en TikTok",
+    url: "https://www.tiktok.com/@tealormode",
+    icon: "video"
+  },
+  {
+    id: 3,
+    platform: "Instagram",
+    label: "Mi día a día en Instagram",
+    url: "https://www.instagram.com/tealormode?igsh=Z2x0MHd0aDIwejds",
+    icon: "instagram"
+  }
+];
+
+const freeResource = {
+  title: "Protocolo ABS",
+  description: "El sistema completo para eliminar grasa rebelde y marcar abdominales",
+  buttonText: "Descargar gratis",
+  featured: true
+};
+
+const futureProducts = [
+  {
+    id: 1,
+    title: "Rutina Avanzada",
+    description: "Programa completo de 12 semanas",
+    status: "Próximamente",
+    comingSoon: true
+  },
+  {
+    id: 2,
+    title: "Curso Completo",
+    description: "Masterclass de transformación física",
+    status: "Próximamente",
+    comingSoon: true
+  }
+];
+
+const finalCTA = {
+  message: "Si no entiendes esto, seguirás igual dentro de 6 meses.",
+  buttonText: "Descargar rutina"
+};
 
 const Home = () => {
-  const handleDownload = () => {
-    // Mock download functionality
-    alert('¡Descarga iniciada! (Funcionalidad mock - se conectará con el backend)');
+  const [downloading, setDownloading] = useState(false);
+
+  const handleDownload = async () => {
+    try {
+      setDownloading(true);
+      
+      // Track download click
+      await axios.post(`${API}/analytics/click`, {
+        button_type: 'download',
+        button_name: 'protocolo-abs'
+      });
+      
+      // Open download in new window
+      window.open(`${API}/download/protocolo-abs`, '_blank');
+      
+    } catch (error) {
+      console.error('Error downloading PDF:', error);
+      
+      // Check if PDF exists
+      if (error.response?.status === 404) {
+        alert('El PDF aún no está disponible. Por favor, contacta al administrador.');
+      } else {
+        alert('Error al descargar el PDF. Por favor, intenta de nuevo.');
+      }
+    } finally {
+      setDownloading(false);
+    }
+  };
+
+  const handleSocialClick = async (platform) => {
+    try {
+      // Track social click
+      await axios.post(`${API}/analytics/click`, {
+        button_type: 'social',
+        button_name: platform.toLowerCase()
+      });
+    } catch (error) {
+      console.error('Error tracking click:', error);
+      // Continue with navigation even if tracking fails
+    }
   };
 
   const getIcon = (iconName) => {
@@ -39,9 +140,10 @@ const Home = () => {
         <button 
           className="btn-primary btn-large btn-featured"
           onClick={handleDownload}
+          disabled={downloading}
         >
           <Flame className="btn-icon" />
-          Descargar rutina gratis
+          {downloading ? 'Descargando...' : 'Descargar rutina gratis'}
         </button>
       </section>
 
@@ -54,6 +156,7 @@ const Home = () => {
             target="_blank"
             rel="noopener noreferrer"
             className="social-link-btn"
+            onClick={() => handleSocialClick(link.platform)}
           >
             {getIcon(link.icon)}
             <span>{link.label}</span>
@@ -69,9 +172,10 @@ const Home = () => {
           <button 
             className="btn-primary btn-medium"
             onClick={handleDownload}
+            disabled={downloading}
           >
             <Download className="btn-icon" />
-            {freeResource.buttonText}
+            {downloading ? 'Descargando...' : freeResource.buttonText}
           </button>
         </div>
       </section>
@@ -96,9 +200,10 @@ const Home = () => {
         <button 
           className="btn-primary btn-large"
           onClick={handleDownload}
+          disabled={downloading}
         >
           <Download className="btn-icon" />
-          {finalCTA.buttonText}
+          {downloading ? 'Descargando...' : finalCTA.buttonText}
         </button>
       </section>
 
