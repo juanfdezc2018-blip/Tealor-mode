@@ -3,16 +3,18 @@
 import requests
 import sys
 import json
+import uuid
 from datetime import datetime
 from pathlib import Path
 
-class TealorModeAPITester:
+class TealorModeLeadGenTester:
     def __init__(self, base_url="https://bio-link-fitness.preview.emergentagent.com"):
         self.base_url = base_url
         self.api_url = f"{base_url}/api"
         self.tests_run = 0
         self.tests_passed = 0
         self.failed_tests = []
+        self.test_email = f"test_{uuid.uuid4().hex[:8]}@example.com"
 
     def log_test(self, name, success, details=""):
         """Log test results"""
@@ -42,6 +44,194 @@ class TealorModeAPITester:
             self.log_test("API Health Check", False, str(e))
             return False
 
+    def test_email_capture(self):
+        """Test email capture functionality"""
+        try:
+            payload = {
+                "email": self.test_email,
+                "source": "main_form"
+            }
+            response = requests.post(
+                f"{self.api_url}/email/capture",
+                json=payload,
+                headers={'Content-Type': 'application/json'},
+                timeout=10
+            )
+            
+            success = response.status_code == 200
+            if success:
+                data = response.json()
+                success = data.get("success", False) and data.get("email") == self.test_email
+                details = f"Response: {data}"
+            else:
+                details = f"Status: {response.status_code}, Response: {response.text[:200]}"
+            
+            self.log_test("Email Capture", success, details if not success else "")
+            return success
+        except Exception as e:
+            self.log_test("Email Capture", False, str(e))
+            return False
+
+    def test_duplicate_email_handling(self):
+        """Test duplicate email handling (should update timestamp)"""
+        try:
+            # Submit same email again
+            payload = {
+                "email": self.test_email,
+                "source": "hero_cta"
+            }
+            response = requests.post(
+                f"{self.api_url}/email/capture",
+                json=payload,
+                headers={'Content-Type': 'application/json'},
+                timeout=10
+            )
+            
+            success = response.status_code == 200
+            if success:
+                data = response.json()
+                success = data.get("success", False)
+                details = f"Response: {data}"
+            else:
+                details = f"Status: {response.status_code}, Response: {response.text[:200]}"
+            
+            self.log_test("Duplicate Email Handling", success, details if not success else "")
+            return success
+        except Exception as e:
+            self.log_test("Duplicate Email Handling", False, str(e))
+            return False
+
+    def test_mark_pdf_downloaded(self):
+        """Test marking email as PDF downloaded"""
+        try:
+            response = requests.post(
+                f"{self.api_url}/email/mark-downloaded/{self.test_email}",
+                timeout=10
+            )
+            
+            success = response.status_code == 200
+            if success:
+                data = response.json()
+                success = data.get("success", False)
+                details = f"Response: {data}"
+            else:
+                details = f"Status: {response.status_code}, Response: {response.text[:200]}"
+            
+            self.log_test("Mark PDF Downloaded", success, details if not success else "")
+            return success
+        except Exception as e:
+            self.log_test("Mark PDF Downloaded", False, str(e))
+            return False
+
+    def test_email_list(self):
+        """Test getting email list"""
+        try:
+            response = requests.get(f"{self.api_url}/email/list?limit=10", timeout=10)
+            success = response.status_code == 200
+            
+            if success:
+                data = response.json()
+                success = data.get("success", False) and "emails" in data and "total_emails" in data
+                details = f"Total emails: {data.get('total_emails', 0)}, Retrieved: {len(data.get('emails', []))}"
+            else:
+                details = f"Status: {response.status_code}, Response: {response.text[:200]}"
+            
+            self.log_test("Email List", success, details if not success else "")
+            return success
+        except Exception as e:
+            self.log_test("Email List", False, str(e))
+            return False
+
+    def test_email_stats(self):
+        """Test getting email statistics"""
+        try:
+            response = requests.get(f"{self.api_url}/email/stats", timeout=10)
+            success = response.status_code == 200
+            
+            if success:
+                data = response.json()
+                success = data.get("success", False) and "total_emails" in data
+                details = f"Total: {data.get('total_emails', 0)}, Downloaded: {data.get('downloaded_pdf', 0)}, Conversion: {data.get('conversion_rate', 0)}%"
+            else:
+                details = f"Status: {response.status_code}, Response: {response.text[:200]}"
+            
+            self.log_test("Email Stats", success, details if not success else "")
+            return success
+        except Exception as e:
+            self.log_test("Email Stats", False, str(e))
+            return False
+
+    def test_email_export_csv(self):
+        """Test CSV export functionality"""
+        try:
+            response = requests.get(f"{self.api_url}/email/export/csv", timeout=15)
+            success = response.status_code == 200
+            
+            if success:
+                content_type = response.headers.get('content-type', '')
+                success = 'text/csv' in content_type
+                details = f"Content-Type: {content_type}, Size: {len(response.content)} bytes"
+            else:
+                details = f"Status: {response.status_code}, Response: {response.text[:200]}"
+            
+            self.log_test("Email CSV Export", success, details if not success else "")
+            return success
+        except Exception as e:
+            self.log_test("Email CSV Export", False, str(e))
+            return False
+
+    def test_email_validation(self):
+        """Test email validation with invalid email"""
+        try:
+            payload = {
+                "email": "invalid-email",
+                "source": "test"
+            }
+            response = requests.post(
+                f"{self.api_url}/email/capture",
+                json=payload,
+                headers={'Content-Type': 'application/json'},
+                timeout=10
+            )
+            
+            # Should return 422 for validation error
+            success = response.status_code == 422
+            details = f"Status: {response.status_code}, Response: {response.text[:200]}"
+            
+            self.log_test("Email Validation", success, details if not success else "")
+            return success
+        except Exception as e:
+            self.log_test("Email Validation", False, str(e))
+            return False
+
+    def test_track_email_capture_click(self):
+        """Test analytics tracking for email capture clicks"""
+        try:
+            payload = {
+                "button_type": "email_capture",
+                "button_name": "main_form"
+            }
+            response = requests.post(
+                f"{self.api_url}/analytics/click",
+                json=payload,
+                headers={'Content-Type': 'application/json'},
+                timeout=10
+            )
+            
+            success = response.status_code == 200
+            if success:
+                data = response.json()
+                success = data.get("success", False)
+                details = f"Response: {data}"
+            else:
+                details = f"Status: {response.status_code}, Response: {response.text[:200]}"
+            
+            self.log_test("Track Email Capture Click", success, details if not success else "")
+            return success
+        except Exception as e:
+            self.log_test("Track Email Capture Click", False, str(e))
+            return False
+
     def test_pdf_download(self):
         """Test PDF download endpoint"""
         try:
@@ -60,53 +250,6 @@ class TealorModeAPITester:
             return success
         except Exception as e:
             self.log_test("PDF Download", False, str(e))
-            return False
-
-    def test_check_pdf_exists(self):
-        """Test PDF existence check endpoint"""
-        try:
-            response = requests.get(f"{self.api_url}/download/check-pdf", timeout=10)
-            success = response.status_code == 200
-            
-            if success:
-                data = response.json()
-                success = data.get("exists", False)
-                details = f"PDF exists: {data.get('exists')}, Path: {data.get('path')}"
-            else:
-                details = f"Status: {response.status_code}"
-            
-            self.log_test("PDF Existence Check", success, details if not success else "")
-            return success
-        except Exception as e:
-            self.log_test("PDF Existence Check", False, str(e))
-            return False
-
-    def test_track_download_click(self):
-        """Test analytics tracking for download clicks"""
-        try:
-            payload = {
-                "button_type": "download",
-                "button_name": "protocolo-abs"
-            }
-            response = requests.post(
-                f"{self.api_url}/analytics/click",
-                json=payload,
-                headers={'Content-Type': 'application/json'},
-                timeout=10
-            )
-            
-            success = response.status_code == 200
-            if success:
-                data = response.json()
-                success = data.get("success", False)
-                details = f"Response: {data}"
-            else:
-                details = f"Status: {response.status_code}, Response: {response.text[:200]}"
-            
-            self.log_test("Track Download Click", success, details if not success else "")
-            return success
-        except Exception as e:
-            self.log_test("Track Download Click", False, str(e))
             return False
 
     def test_track_social_click(self):
@@ -156,65 +299,11 @@ class TealorModeAPITester:
             self.log_test("Get Analytics Stats", False, str(e))
             return False
 
-    def test_get_download_stats(self):
-        """Test getting download statistics"""
-        try:
-            response = requests.get(f"{self.api_url}/download/stats", timeout=10)
-            success = response.status_code == 200
-            
-            if success:
-                data = response.json()
-                success = data.get("success", False) and "download_count" in data
-                details = f"Download count: {data.get('download_count', 0)}"
-            else:
-                details = f"Status: {response.status_code}, Response: {response.text[:200]}"
-            
-            self.log_test("Get Download Stats", success, details if not success else "")
-            return success
-        except Exception as e:
-            self.log_test("Get Download Stats", False, str(e))
-            return False
-
-    def test_multiple_download_tracking(self):
-        """Test that multiple downloads are tracked correctly"""
-        try:
-            # Get initial download count
-            initial_response = requests.get(f"{self.api_url}/download/stats", timeout=10)
-            if initial_response.status_code != 200:
-                self.log_test("Multiple Download Tracking", False, "Could not get initial stats")
-                return False
-            
-            initial_count = initial_response.json().get("download_count", 0)
-            
-            # Perform 2 downloads
-            for i in range(2):
-                download_response = requests.get(f"{self.api_url}/download/protocolo-abs", timeout=15)
-                if download_response.status_code != 200:
-                    self.log_test("Multiple Download Tracking", False, f"Download {i+1} failed")
-                    return False
-            
-            # Check final count
-            final_response = requests.get(f"{self.api_url}/download/stats", timeout=10)
-            if final_response.status_code != 200:
-                self.log_test("Multiple Download Tracking", False, "Could not get final stats")
-                return False
-            
-            final_count = final_response.json().get("download_count", 0)
-            expected_count = initial_count + 2
-            success = final_count == expected_count
-            
-            details = f"Initial: {initial_count}, Final: {final_count}, Expected: {expected_count}"
-            self.log_test("Multiple Download Tracking", success, details if not success else "")
-            return success
-            
-        except Exception as e:
-            self.log_test("Multiple Download Tracking", False, str(e))
-            return False
-
     def run_all_tests(self):
         """Run all backend tests"""
-        print("🚀 Starting Tealor Mode Backend API Tests")
+        print("🚀 Starting Tealor Mode Lead Generation Backend Tests")
         print(f"🌐 Testing against: {self.base_url}")
+        print(f"📧 Test email: {self.test_email}")
         print("=" * 60)
         
         # Test API health first
@@ -222,14 +311,20 @@ class TealorModeAPITester:
             print("\n❌ API is not responding. Stopping tests.")
             return False
         
-        # Run all tests
-        self.test_check_pdf_exists()
-        self.test_pdf_download()
-        self.test_track_download_click()
+        # Test email capture system
+        self.test_email_capture()
+        self.test_duplicate_email_handling()
+        self.test_mark_pdf_downloaded()
+        self.test_email_list()
+        self.test_email_stats()
+        self.test_email_export_csv()
+        self.test_email_validation()
+        
+        # Test analytics and downloads
+        self.test_track_email_capture_click()
         self.test_track_social_click()
+        self.test_pdf_download()
         self.test_get_analytics_stats()
-        self.test_get_download_stats()
-        self.test_multiple_download_tracking()
         
         # Print summary
         print("\n" + "=" * 60)
@@ -246,7 +341,7 @@ class TealorModeAPITester:
         return self.tests_passed == self.tests_run
 
 def main():
-    tester = TealorModeAPITester()
+    tester = TealorModeLeadGenTester()
     success = tester.run_all_tests()
     return 0 if success else 1
 

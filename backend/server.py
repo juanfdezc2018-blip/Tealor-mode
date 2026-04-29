@@ -9,7 +9,7 @@ from pathlib import Path
 from database import close_database
 
 # Import routes
-from routes import download, analytics, admin
+from routes import download, analytics, admin, email
 
 
 ROOT_DIR = Path(__file__).parent
@@ -34,6 +34,7 @@ async def root():
 api_router.include_router(download.router, prefix="/download", tags=["Download"])
 api_router.include_router(analytics.router, prefix="/analytics", tags=["Analytics"])
 api_router.include_router(admin.router, prefix="/admin", tags=["Admin"])
+api_router.include_router(email.router, prefix="/email", tags=["Email"])
 
 # Include the router in the main app
 app.include_router(api_router)
