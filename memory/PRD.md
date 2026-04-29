@@ -1,247 +1,416 @@
-# PRD - Tealor Mode Link-in-Bio Landing Page
+# PRD - Tealor Mode Professional Lead Generation System
 
-## Original Problem Statement
-Build a high-converting "link in bio" landing page for a fitness creator brand called "Tealor Mode" with a dark theme, minimal design, and mobile-first approach. The page should drive users to download a free fitness PDF and visit social media profiles.
+## Project Evolution
 
-## User Personas
-- **Primary**: Fitness enthusiasts seeking transformation guidance
-- **Secondary**: Social media followers looking for free resources and training programs
+**Phase 1**: Basic link-in-bio landing page (Dec 17, 2026)
+**Phase 2**: Backend integration + Analytics (Dec 17, 2026)
+**Phase 3**: Professional Lead Generation System ✓ (Dec 17, 2026)
 
-## Core Requirements
-1. Dark theme (pure black background with lime green accents)
-2. Mobile-first, centered layout design
-3. Profile section with avatar, name, and bio
-4. Primary CTA for PDF download
-5. Social media links (YouTube, TikTok, Instagram)
-6. Free resource showcase (Protocolo ABS)
-7. Future products section (placeholders)
-8. Final conversion CTA
-9. Smooth animations and hover effects
-10. Backend system for PDF downloads
-11. Analytics tracking for clicks and downloads
+---
+
+## Current System: Professional Lead Generation Platform
+
+### Overview
+Tealor Mode is now a complete professional lead generation and email marketing platform designed to capture qualified leads interested in science-based fat loss and body transformation. The system positions the brand as premium, science-driven, and results-focused (not traditional fitness).
+
+### Target Audience
+- Fitness enthusiasts serious about fat loss
+- People frustrated with ineffective methods
+- Individuals seeking science-based approaches
+- Quality leads interested in long-term transformation
+
+---
 
 ## Architecture & Tech Stack
-- **Frontend**: React, Tailwind CSS, Lucide React icons, Axios
-- **Backend**: FastAPI, MongoDB, Motor (async MongoDB driver)
-- **Design System**: Neon-tech guidelines (pure black + lime green #d9fb06)
-- **File Storage**: Local file system (/app/backend/static/pdfs/)
+
+**Frontend:**
+- React (Hot reload enabled)
+- Tailwind CSS
+- Lucide React icons
+- Axios for API calls
+- Smooth scroll animations
+
+**Backend:**
+- FastAPI (async)
+- MongoDB (Motor driver)
+- Pydantic validation
+- CSV export capability
+
+**Design System:**
+- Pure black background (#000000)
+- Lime green primary (#d9fb06)
+- Minimal, elegant, professional
+- Mobile-first responsive
 
 ---
 
-## What's Been Implemented
+## Complete Feature Set
 
-### ✅ Phase 1 - Frontend with Mock Data (December 17, 2026)
-**Files Created**:
-- `/app/frontend/src/pages/Home.jsx` - Main landing page component
-- `/app/frontend/src/data/mock.js` - Mock data (REMOVED in Phase 2)
-- `/app/frontend/src/App.css` - Custom styles following neon-tech guidelines
-- Updated `/app/frontend/src/App.js` - Routing configuration
-- Updated `/app/frontend/src/index.css` - Global styles
+### ✅ Lead Capture System
 
-**Features**: All frontend sections with mock functionality
+**Email Capture Features:**
+1. Main conversion-optimized form
+2. Email validation (HTML5 + Pydantic)
+3. Duplicate handling (updates timestamp)
+4. Source tracking (hero_cta, main_form, footer_cta)
+5. IP address + user agent logging
+6. PDF download marking
+7. Analytics integration
 
----
-
-### ✅ Phase 2 - Backend Development & Integration (December 17, 2026)
-
-#### Backend Files Created:
-- `/app/backend/database.py` - MongoDB connection management
-- `/app/backend/models/analytics.py` - Pydantic models for downloads and clicks
-- `/app/backend/routes/download.py` - PDF download endpoints
-- `/app/backend/routes/analytics.py` - Click tracking endpoints
-- `/app/backend/routes/admin.py` - Admin upload/delete endpoints
-- `/app/backend/static/pdfs/protocolo-abs.pdf` - Sample PDF file
-
-#### API Endpoints Implemented:
-
-**Download Routes** (`/api/download/`)
-- `GET /protocolo-abs` - Download PDF file (tracks downloads)
-- `GET /stats` - Get download statistics
-- `GET /check-pdf` - Check if PDF exists
-
-**Analytics Routes** (`/api/analytics/`)
-- `POST /click` - Track button clicks (social links, downloads)
-- `GET /stats` - Get click statistics grouped by button type
-
-**Admin Routes** (`/api/admin/`)
-- `POST /upload-pdf` - Upload new PDF file
-- `DELETE /delete-pdf` - Delete existing PDF
-
-#### Frontend Integration:
-- **Updated** `/app/frontend/src/pages/Home.jsx`:
-  - Removed mock.js dependency
-  - Added axios API calls for downloads
-  - Added analytics tracking on all button clicks
-  - Added loading states ("Descargando...")
-  - Moved data inline (no external mock file)
-  
-- **Removed**: `/app/frontend/src/data/mock.js` (no longer needed)
-
-#### Database Collections:
-- `downloads` - Tracks PDF downloads with IP, timestamp, user agent
-- `clicks` - Tracks all button clicks (social, download, CTA) with metadata
-
-#### Features Implemented:
-1. ✅ Real PDF download functionality
-2. ✅ Download tracking in MongoDB
-3. ✅ Click analytics for all buttons
-4. ✅ Social media click tracking
-5. ✅ Download statistics endpoint
-6. ✅ Click statistics endpoint (aggregated)
-7. ✅ PDF existence checker
-8. ✅ Admin upload capability
-9. ✅ Loading states on download buttons
-10. ✅ Error handling (404 for missing PDF, 500 for server errors)
-
----
-
-## Testing Results (December 17, 2026)
-
-### Backend Testing: ✅ 100% (8/8 tests passed)
-- API health check ✓
-- PDF download endpoint ✓
-- Analytics tracking (downloads) ✓
-- Analytics tracking (social clicks) ✓
-- Multiple downloads tracked correctly ✓
-- Statistics endpoints ✓
-- PDF check endpoint ✓
-- Error handling ✓
-
-### Frontend Testing: ✅ 95%
-- All page sections loading ✓
-- Social media links working ✓
-- Download buttons functional ✓
-- Responsive design (mobile + desktop) ✓
-- Hover effects working ✓
-- No JavaScript errors ✓
-- Loading state visibility (minor improvement made) ✓
-
-### Integration Testing: ✅ 100%
-- Frontend → Backend API calls working
-- Analytics tracking end-to-end
-- PDF downloads opening correctly
-- Error handling functional
-
-**Test Report**: `/app/test_reports/iteration_1.json`
-- 14 downloads tracked
-- 18 social clicks tracked
-- All touch targets accessible (>44px)
-- No horizontal scrolling issues
-
----
-
-## Current Status: ✅ PRODUCTION READY
-
-The application is fully functional with:
-- Complete PDF download system
-- Analytics tracking operational
-- Error handling in place
-- Mobile-optimized design
-- Real-time click tracking
-
-### How to Use:
-
-**For End Users:**
-1. Visit landing page
-2. Click download buttons to get PDF
-3. Click social links to visit profiles
-4. All actions tracked automatically
-
-**For Admin:**
-1. Upload new PDF: `POST /api/admin/upload-pdf` with file
-2. Check stats: `GET /api/analytics/stats` and `GET /api/download/stats`
-3. Delete PDF: `DELETE /api/admin/delete-pdf`
-
----
-
-## API Documentation
-
-### Download Endpoints
-
-```bash
-# Download PDF
-GET /api/download/protocolo-abs
-Response: PDF file download (tracks in database)
-
-# Check PDF exists
-GET /api/download/check-pdf
-Response: { "exists": true, "path": "...", "message": "..." }
-
-# Get download stats
-GET /api/download/stats
-Response: { "success": true, "download_count": 14 }
-```
-
-### Analytics Endpoints
-
-```bash
-# Track click
-POST /api/analytics/click
-Body: { "button_type": "social", "button_name": "youtube" }
-Response: { "success": true, "message": "Click tracked successfully" }
-
-# Get click stats
-GET /api/analytics/stats
-Response: {
-  "success": true,
-  "stats": [
-    { "button_type": "download", "button_name": "protocolo-abs", "clicks": 12 },
-    { "button_type": "social", "button_name": "youtube", "clicks": 3 }
-  ],
-  "total_clicks": 18
+**Database Schema (emails collection):**
+```json
+{
+  "id": "uuid",
+  "email": "user@example.com",
+  "source": "main_form",
+  "timestamp": "ISO datetime",
+  "ip_address": "x.x.x.x",
+  "user_agent": "...",
+  "downloaded_pdf": true/false
 }
 ```
 
+### ✅ Landing Page Structure
+
+**1. Brand Header**
+- Logo with lime green glow effect
+- Clean, professional presentation
+
+**2. Hero Section**
+- Headline: "El sistema que elimina grasa rebelde sin cardio absurdo"
+- Subtitle: Science-based positioning
+- Primary CTA button (scrolls to email form)
+
+**3. Email Capture Section** (Main Conversion Point)
+- Title: "Accede al sistema que realmente elimina grasa rebelde"
+- Email input (centered, pill-shaped)
+- "Acceder ahora" button
+- Trust message: "Sin spam. Solo contenido útil."
+- Lime green border highlight
+
+**4. Value Proposition Section**
+- 4 cards explaining what users receive:
+  * PDF: Fundamentos reales
+  * Sistema paso a paso
+  * Errores que bloquean resultados
+  * Estructura semanal
+- Icon-based visual design
+
+**5. Brand Positioning Section**
+- Statement: "Tealor Mode no es fitness tradicional"
+- Premium, science-based positioning
+- Dark card background
+
+**6. Protocol/System Section**
+- 4-step system visualization:
+  * 01 - Diagnóstico
+  * 02 - Ajuste
+  * 03 - Ejecución
+  * 04 - Optimización
+- Large step numbers with descriptions
+
+**7. Final CTA Section**
+- Strong message: "Si no entiendes esto, seguirás igual dentro de 6 meses"
+- CTA button scrolling to email form
+- High-contrast design
+
+**8. Social Media Section**
+- Minimalist social buttons
+- YouTube, TikTok, Instagram
+- Analytics tracking on clicks
+
+**9. Professional Footer**
+- Brand section: "Tealor Mode - Sistema basado en ciencia"
+- Contact section: info@tealormode.com
+- Collaboration section: "Colaboraciones y marcas"
+- Copyright notice
+- Grid layout, professional styling
+
+**10. Thank You Page** (Post-Submission)
+- Success checkmark icon
+- "¡Bienvenido al sistema!" message
+- Auto PDF download trigger
+- Social media follow buttons
+- "Volver al inicio" option
+
 ---
 
-## Prioritized Backlog
+## API Endpoints
 
-### P1 Features (Optional Enhancements)
-1. **Email Capture**
-   - Collect email before PDF download
-   - Build email marketing list
-   - Email validation
+### Email Endpoints (`/api/email/`)
 
-2. **Admin Dashboard**
-   - View analytics in UI
-   - Upload PDFs through interface
-   - Real-time stats visualization
+**POST /capture**
+```json
+Request: { "email": "user@email.com", "source": "main_form" }
+Response: { "success": true, "message": "Email capturado", "email": "user@email.com" }
+```
 
-3. **Enhanced Analytics**
-   - Geographic tracking
-   - Conversion funnel metrics
-   - Time-based analytics (daily/weekly/monthly)
+**GET /list** (Admin)
+```json
+Query params: limit=100, skip=0
+Response: {
+  "success": true,
+  "total_emails": 150,
+  "emails": [...]
+}
+```
 
-### P2 Features (Future)
-1. Multiple PDF resources
-2. Video content embeds
-3. Blog/content section
-4. Newsletter integration
-5. A/B testing for CTAs
+**GET /export/csv** (Mailchimp/Beehiiv Integration)
+- Returns: CSV file with columns: Email, Source, Timestamp, Downloaded_PDF
+- Headers: Content-Disposition attachment
+- Format: Compatible with email marketing tools
+
+**GET /stats**
+```json
+Response: {
+  "success": true,
+  "total_emails": 150,
+  "emails_by_source": [...],
+  "downloaded_pdf": 120,
+  "conversion_rate": 80.0
+}
+```
+
+**POST /mark-downloaded/{email}**
+- Marks email as having downloaded PDF
+- Updates `downloaded_pdf` field to true
+
+### Download Endpoints (`/api/download/`)
+- GET /protocolo-abs - Download PDF
+- GET /stats - Download statistics
+- GET /check-pdf - Verify PDF exists
+
+### Analytics Endpoints (`/api/analytics/`)
+- POST /click - Track clicks
+- GET /stats - Click statistics
+
+---
+
+## Testing Results
+
+### Backend: ✅ 100% (12/12 tests passed)
+- Email capture with validation
+- Duplicate email handling
+- PDF download marking
+- Email list retrieval
+- CSV export functionality
+- Statistics endpoints
+- Source tracking
+- Analytics integration
+
+### Frontend: ✅ 100%
+- All sections rendering correctly
+- Email form validation
+- Smooth scroll animations
+- Thank you page flow
+- Automatic PDF download
+- Loading states
+- Mobile responsive (390x844 tested)
+- Social media links
+- Professional footer display
+
+### Integration: ✅ 100%
+- Email capture → Database → Thank you → PDF download
+- Analytics tracking throughout funnel
+- No JavaScript errors
+- Professional aesthetic maintained
+
+**Test Report:** `/app/test_reports/iteration_2.json`
+
+---
+
+## Email Marketing Integration
+
+### Ready for:
+1. **Beehiiv**
+   - Export: GET /api/email/export/csv
+   - Import CSV into Beehiiv
+   - Segment by source
+
+2. **Mailchimp**
+   - Export: GET /api/email/export/csv
+   - Import to audience
+   - Tag by download status
+
+3. **ConvertKit**
+   - Export CSV
+   - Import as subscribers
+   - Tag based on source
+
+### Data Available for Segmentation:
+- Email address
+- Capture source (hero_cta, main_form, footer_cta)
+- Timestamp (lead age)
+- Downloaded PDF (engagement indicator)
+- IP address (geographic data)
+
+---
+
+## User Journey
+
+### Visitor Flow:
+1. **Lands on page** → Views hero section
+2. **Clicks "Acceder al sistema"** → Smooth scrolls to email form
+3. **Enters email** → Validates format
+4. **Clicks "Acceder ahora"** → Shows loading state
+5. **Email saved** → Database stores with metadata
+6. **Thank you page** → Shows success message
+7. **PDF downloads** → Automatic download trigger
+8. **Marked complete** → downloaded_pdf = true
+
+### Database Records:
+- Email captured in `emails` collection
+- Click tracked in `clicks` collection
+- Download tracked in `downloads` collection
+
+---
+
+## Brand Positioning
+
+### Key Messages:
+- "Sistema basado en ciencia" (Not typical fitness)
+- "Elimina grasa rebelde sin cardio absurdo"
+- "Resultados reales. Sin dietas extremas."
+- Premium, scientific, results-focused
+
+### Visual Identity:
+- Pure black background (premium, serious)
+- Lime green accents (energy, action, science)
+- Minimal design (professional, focused)
+- Large typography (bold, confident)
+- Clean spacing (premium feel)
+
+---
+
+## Business Features
+
+### Contact for Collaborations:
+- Email: info@tealormode.com
+- Footer section dedicated to brand partnerships
+- Professional presentation
+
+### Lead Quality Indicators:
+- Source tracking (which CTA converted)
+- PDF download completion (engagement)
+- Timestamp (lead recency)
+- Duplicate prevention (clean list)
+
+### Growth Mechanisms:
+- Email list building
+- Content delivery via PDF
+- Social media integration
+- Analytics for optimization
+- Export for email campaigns
+
+---
+
+## Next Steps / Backlog
+
+### P0 - Immediate (Optional):
+1. Replace sample PDF with real Protocolo ABS content
+2. Set up email marketing tool (Beehiiv/Mailchimp)
+3. Create first email sequence
+
+### P1 - Short Term:
+1. Admin dashboard for email list management
+2. Real-time statistics visualization
+3. A/B test headline variations
+4. Landing page performance analytics
+5. Geographic segmentation
+
+### P2 - Medium Term:
+1. Multiple lead magnets (different PDFs)
+2. Progressive profiling (ask more questions)
+3. Email sequence automation
+4. Referral program
+5. Advanced analytics (conversion funnel)
+
+### P3 - Long Term:
+1. Paid products integration
+2. Course platform
+3. Community features
+4. Advanced segmentation
+5. CRM integration
+
+---
+
+## Deployment Status
+
+### ✅ Production Ready
+- All systems operational
+- No critical bugs
+- Mobile optimized
+- Analytics tracking
+- Email capture functional
+- PDF download working
+- CSV export ready
+
+### Environment:
+- Frontend: React (port 3000)
+- Backend: FastAPI (port 8001)
+- Database: MongoDB
+- PDF Storage: /app/backend/static/pdfs/
+
+---
+
+## Success Metrics
+
+### Conversion Tracking:
+- **Email capture rate**: % of visitors who submit email
+- **PDF download rate**: % who complete download
+- **Source performance**: Which CTAs convert best
+- **Time to convert**: How long visitors stay before converting
+
+### Lead Quality:
+- Email validity rate
+- Download completion rate
+- Engagement on social media
+- Response to email campaigns
+
+---
+
+## Files Structure
+
+```
+/app/
+├── frontend/
+│   ├── src/
+│   │   ├── pages/
+│   │   │   └── Home.jsx (Complete lead gen system)
+│   │   ├── App.css (Professional styling)
+│   │   └── index.css (Global styles)
+│   └── package.json
+├── backend/
+│   ├── routes/
+│   │   ├── email.py (Email capture API)
+│   │   ├── download.py (PDF download)
+│   │   ├── analytics.py (Tracking)
+│   │   └── admin.py (Management)
+│   ├── models/
+│   │   ├── email.py (Email schema)
+│   │   └── analytics.py (Analytics schema)
+│   ├── database.py (MongoDB connection)
+│   ├── server.py (FastAPI app)
+│   └── static/pdfs/ (PDF storage)
+└── memory/
+    └── PRD.md (This file)
+```
 
 ---
 
 ## Notes
-- All mock functionality removed ✓
-- Backend fully integrated ✓
-- Analytics operational ✓
-- Sample PDF included for testing
-- Production-ready deployment
+
+- Email capture is the primary conversion goal
+- All copy emphasizes "sistema" not "rutina"
+- Professional footer establishes credibility
+- Ready for email marketing integration
+- CSV export tested and working
+- Mobile-first design maintained
 - No authentication required (public landing page)
-- CORS configured for all origins
-- Error handling comprehensive
+- Brand positioned as premium and science-based
 
 ---
 
-## Deployment Checklist
-- [x] Backend API operational
-- [x] Frontend deployed and connected
-- [x] Database connected (MongoDB)
-- [x] PDF file uploaded
-- [x] Analytics tracking verified
-- [x] Social links configured
-- [x] Mobile responsive verified
-- [x] Error handling tested
-- [ ] Replace sample PDF with real Protocolo ABS content
-- [ ] Optional: Add admin authentication for upload endpoints
-
+**Status:** ✅ PRODUCTION READY - Professional Lead Generation System
+**Last Updated:** December 17, 2026
+**Version:** 3.0 (Lead Generation System)
