@@ -153,7 +153,7 @@ const Home = () => {
       {/* Hero Section */}
       <section className="hero-section-new">
         <h1 className="hero-title-new">
-          Tealor Method
+          El sistema para eliminar grasa rebelde
         </h1>
         <p className="hero-subtitle-new">
           Sin cardio absurdo. Sin dietas extremas. Basado en ciencia.
@@ -329,7 +329,7 @@ const Home = () => {
 
       {/* Social Media Section */}
       <section className="social-section">
-        <p className="social-section-title">Contenido en redes</p>
+        <p className="social-section-title">Contenido diario en redes</p>
         <div className="social-buttons">
           {socialLinks.map((link) => {
             const IconComponent = link.icon;
