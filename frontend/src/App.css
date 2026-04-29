@@ -63,23 +63,24 @@
 .hero-title-new {
   font-family: 'Inter', Arial, sans-serif;
   font-weight: 900;
-  font-size: clamp(2rem, 5vw, 3rem);
-  line-height: 1.1;
+  font-size: clamp(2.2rem, 5vw, 3.5rem);
+  line-height: 1.05;
   color: var(--text-primary);
-  margin-bottom: 20px;
-  letter-spacing: -0.02em;
+  margin-bottom: 24px;
+  letter-spacing: -0.035em;
 }
 
 .hero-subtitle-new {
   font-family: 'Inter', Arial, sans-serif;
   font-weight: 400;
-  font-size: clamp(1.1rem, 3vw, 1.3rem);
-  line-height: 1.5;
+  font-size: clamp(1.15rem, 3vw, 1.35rem);
+  line-height: 1.6;
   color: var(--text-secondary);
-  margin-bottom: 40px;
+  margin-bottom: 48px;
   max-width: 600px;
   margin-left: auto;
   margin-right: auto;
+  letter-spacing: -0.01em;
 }
 
 /* Email Capture Section - MAIN */
@@ -102,19 +103,21 @@
 .email-capture-title {
   font-family: 'Inter', Arial, sans-serif;
   font-weight: 800;
-  font-size: clamp(1.5rem, 4vw, 2rem);
-  line-height: 1.2;
+  font-size: clamp(1.6rem, 4vw, 2.2rem);
+  line-height: 1.15;
   color: var(--brand-primary);
-  margin-bottom: 16px;
+  margin-bottom: 20px;
+  letter-spacing: -0.025em;
 }
 
 .email-capture-subtitle {
   font-family: 'Inter', Arial, sans-serif;
   font-weight: 400;
-  font-size: 1.1rem;
-  line-height: 1.5;
+  font-size: 1.05rem;
+  line-height: 1.6;
   color: var(--text-secondary);
-  margin-bottom: 32px;
+  margin-bottom: 36px;
+  letter-spacing: -0.01em;
 }
 
 .email-form {
@@ -174,11 +177,12 @@
 .section-title {
   font-family: 'Inter', Arial, sans-serif;
   font-weight: 800;
-  font-size: clamp(1.8rem, 4vw, 2.5rem);
-  line-height: 1.2;
+  font-size: clamp(1.9rem, 4vw, 2.6rem);
+  line-height: 1.15;
   color: var(--text-primary);
   text-align: center;
-  margin-bottom: 50px;
+  margin-bottom: 56px;
+  letter-spacing: -0.025em;
 }
 
 .value-grid {
@@ -191,9 +195,14 @@
   background: var(--bg-card);
   border: 1px solid var(--border-subtle);
   border-radius: 20px;
-  padding: 32px 24px;
+  padding: 40px 28px;
   text-align: center;
   transition: all 0.3s ease;
+  min-height: 140px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .value-card:hover {
@@ -216,10 +225,11 @@
 
 .value-card-title {
   font-family: 'Inter', Arial, sans-serif;
-  font-weight: 700;
-  font-size: 1.2rem;
+  font-weight: 600;
+  font-size: 1.1rem;
   color: var(--text-primary);
-  margin-bottom: 12px;
+  margin-bottom: 0;
+  letter-spacing: -0.01em;
 }
 
 .value-card-text {
@@ -247,10 +257,11 @@
 .positioning-title {
   font-family: 'Inter', Arial, sans-serif;
   font-weight: 800;
-  font-size: clamp(1.8rem, 4vw, 2.5rem);
-  line-height: 1.2;
+  font-size: clamp(1.9rem, 4vw, 2.6rem);
+  line-height: 1.15;
   color: var(--brand-primary);
-  margin-bottom: 24px;
+  margin-bottom: 32px;
+  letter-spacing: -0.025em;
 }
 
 .positioning-text {
@@ -259,6 +270,12 @@
   font-size: 1.15rem;
   line-height: 1.7;
   color: var(--text-secondary);
+  letter-spacing: -0.01em;
+  margin-bottom: 12px;
+}
+
+.positioning-text:last-child {
+  margin-bottom: 0;
 }
 
 /* Protocol Section */
@@ -301,8 +318,9 @@
   font-family: 'Inter', Arial, sans-serif;
   font-weight: 400;
   font-size: 0.95rem;
-  line-height: 1.6;
+  line-height: 1.5;
   color: var(--text-secondary);
+  letter-spacing: -0.005em;
 }
 
 /* Final CTA Section */

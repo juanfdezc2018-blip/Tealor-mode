@@ -153,10 +153,10 @@ const Home = () => {
       {/* Hero Section */}
       <section className="hero-section-new">
         <h1 className="hero-title-new">
-          El sistema que elimina grasa rebelde sin cardio absurdo
+          El sistema para eliminar grasa rebelde
         </h1>
         <p className="hero-subtitle-new">
-          Basado en ciencia. Resultados reales. Sin dietas extremas.
+          Sin cardio absurdo. Sin dietas extremas. Basado en ciencia.
         </p>
         <button 
           className="btn-primary btn-large"
@@ -171,10 +171,10 @@ const Home = () => {
       <section className="email-capture-section" id="email-capture">
         <div className="email-capture-card">
           <h2 className="email-capture-title">
-            Accede al sistema que realmente elimina grasa rebelde
+            Accede al sistema que realmente funciona
           </h2>
           <p className="email-capture-subtitle">
-            Sin cardio absurdo. Sin dietas extremas. Basado en ciencia.
+            Aprende cómo eliminar grasa sin complicarte ni perder tiempo
           </p>
 
           {error && <p className="error-message">{error}</p>}
@@ -184,7 +184,7 @@ const Home = () => {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="Tu mejor email"
+              placeholder="Tu email"
               className="email-input"
               required
               disabled={loading}
@@ -199,7 +199,7 @@ const Home = () => {
               ) : (
                 <>
                   <Mail className="btn-icon" />
-                  Acceder ahora
+                  Empezar ahora
                 </>
               )}
             </button>
@@ -220,10 +220,7 @@ const Home = () => {
             <div className="value-icon">
               <Download size={32} />
             </div>
-            <h3 className="value-card-title">PDF: Fundamentos reales</h3>
-            <p className="value-card-text">
-              Los principios científicos de pérdida de grasa que realmente funcionan
-            </p>
+            <h3 className="value-card-title">PDF: fundamentos reales</h3>
           </div>
 
           <div className="value-card">
@@ -231,9 +228,6 @@ const Home = () => {
               <Target size={32} />
             </div>
             <h3 className="value-card-title">Sistema paso a paso</h3>
-            <p className="value-card-text">
-              Estructura clara y simple para aplicar desde el día 1
-            </p>
           </div>
 
           <div className="value-card">
@@ -241,9 +235,6 @@ const Home = () => {
               <Zap size={32} />
             </div>
             <h3 className="value-card-title">Errores que te bloquean</h3>
-            <p className="value-card-text">
-              Los fallos más comunes que impiden ver resultados reales
-            </p>
           </div>
 
           <div className="value-card">
@@ -251,9 +242,6 @@ const Home = () => {
               <Activity size={32} />
             </div>
             <h3 className="value-card-title">Estructura semanal</h3>
-            <p className="value-card-text">
-              Plan simple y consistente para seguir sin agobiarte
-            </p>
           </div>
         </div>
       </section>
@@ -265,9 +253,10 @@ const Home = () => {
             Tealor Mode no es fitness tradicional
           </h2>
           <p className="positioning-text">
-            Es un sistema basado en datos, consistencia y resultados reales.
-            <br />
-            Sin promesas vacías. Sin trucos. Solo ciencia aplicada.
+            Es un sistema basado en datos, consistencia y decisiones correctas.
+          </p>
+          <p className="positioning-text">
+            Sin ruido. Sin promesas vacías. Solo resultados medibles.
           </p>
         </div>
       </section>
@@ -280,7 +269,7 @@ const Home = () => {
             <div className="step-number">01</div>
             <h3 className="step-title">Diagnóstico</h3>
             <p className="step-text">
-              Identificar tu punto actual y establecer objetivos reales
+              Entiende qué estás haciendo mal
             </p>
           </div>
 
@@ -288,7 +277,7 @@ const Home = () => {
             <div className="step-number">02</div>
             <h3 className="step-title">Ajuste</h3>
             <p className="step-text">
-              Configurar tu déficit calórico y estructura de entrenamiento
+              Configura lo mínimo necesario
             </p>
           </div>
 
@@ -296,7 +285,7 @@ const Home = () => {
             <div className="step-number">03</div>
             <h3 className="step-title">Ejecución</h3>
             <p className="step-text">
-              Aplicar el sistema con consistencia durante 12 semanas
+              Aplica sin complicarte
             </p>
           </div>
 
@@ -304,7 +293,7 @@ const Home = () => {
             <div className="step-number">04</div>
             <h3 className="step-title">Optimización</h3>
             <p className="step-text">
-              Ajustar variables según progreso y mantener resultados
+              Ajusta según resultados
             </p>
           </div>
         </div>
@@ -321,7 +310,7 @@ const Home = () => {
             onClick={() => document.getElementById('email-capture').scrollIntoView({ behavior: 'smooth' })}
           >
             <ArrowRight className="btn-icon" />
-            Acceder al sistema
+            Entrar al sistema
           </button>
         </div>
       </section>
