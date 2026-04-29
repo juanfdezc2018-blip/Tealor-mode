@@ -152,8 +152,8 @@ const Home = () => {
 
       {/* Hero Section */}
       <section className="hero-section-new">
-        <h1 className="hero-title-new">
-          El sistema para eliminar grasa rebelde
+        <h1 className="hero-title-new hero-title-elegant">
+          Tealor Method
         </h1>
         <p className="hero-subtitle-new">
           Sin cardio absurdo. Sin dietas extremas. Basado en ciencia.
