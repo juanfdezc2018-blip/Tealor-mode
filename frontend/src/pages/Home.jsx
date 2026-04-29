@@ -214,13 +214,16 @@ const Home = () => {
 
       {/* What You Get Section */}
       <section className="value-section">
-        <h2 className="section-title">Qué recibes al unirte</h2>
+        <h2 className="section-title">No es genética, es sistema</h2>
         <div className="value-grid">
           <div className="value-card">
             <div className="value-icon">
               <Download size={32} />
             </div>
             <h3 className="value-card-title">PDF: fundamentos reales</h3>
+            <p className="value-card-text">
+              Los principios científicos de pérdida de grasa que realmente funcionan
+            </p>
           </div>
 
           <div className="value-card">
@@ -228,6 +231,9 @@ const Home = () => {
               <Target size={32} />
             </div>
             <h3 className="value-card-title">Sistema paso a paso</h3>
+            <p className="value-card-text">
+              Estructura clara y simple para aplicar desde el día 1
+            </p>
           </div>
 
           <div className="value-card">
@@ -235,6 +241,9 @@ const Home = () => {
               <Zap size={32} />
             </div>
             <h3 className="value-card-title">Errores que te bloquean</h3>
+            <p className="value-card-text">
+              Los fallos más comunes que impiden ver resultados reales
+            </p>
           </div>
 
           <div className="value-card">
@@ -242,6 +251,9 @@ const Home = () => {
               <Activity size={32} />
             </div>
             <h3 className="value-card-title">Estructura semanal</h3>
+            <p className="value-card-text">
+              Plan simple y consistente para seguir sin agobiarte
+            </p>
           </div>
         </div>
       </section>
