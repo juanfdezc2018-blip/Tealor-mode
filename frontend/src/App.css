@@ -43,12 +43,18 @@
 }
 
 .brand-logo {
-  width: 80px;
-  height: 80px;
+  width: 140px;
+  height: 140px;
   border-radius: 50%;
   border: 3px solid var(--brand-primary);
-  box-shadow: 0 0 20px rgba(217, 251, 6, 0.3);
+  box-shadow: 0 0 30px rgba(217, 251, 6, 0.5);
   object-fit: cover;
+  transition: all 0.3s ease;
+}
+
+.brand-logo:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 40px rgba(217, 251, 6, 0.7);
 }
 
 /* New Hero Section */

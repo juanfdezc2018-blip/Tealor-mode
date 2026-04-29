@@ -354,7 +354,7 @@ const Home = () => {
       <footer className="footer-professional">
         <div className="footer-content">
           <div className="footer-brand">
-            <p className="footer-brand-name">Tealor Mode</p>
+            <p className="footer-brand-name">Tealor Method</p>
             <p className="footer-tagline">Sistema basado en ciencia</p>
           </div>
 
@@ -375,7 +375,7 @@ const Home = () => {
         </div>
 
         <div className="footer-bottom">
-          <p>© 2026 Tealor Mode. Todos los derechos reservados.</p>
+          <p>© 2026 Tealor Method. Todos los derechos reservados.</p>
         </div>
       </footer>
     </div>
