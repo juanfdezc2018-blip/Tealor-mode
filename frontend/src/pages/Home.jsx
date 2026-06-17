@@ -11,6 +11,7 @@ import {
   Activity,
   Zap,
   BookOpen,
+  ChevronDown,
 } from 'lucide-react';
 import axios from 'axios';
 
@@ -39,6 +40,29 @@ const steps = [
   { n: "04", title: "Optimización",  text: "Ajusta según resultados reales." },
 ];
 
+const learnPoints = [
+  "Cómo perder grasa sin vivir a dieta.",
+  "Cómo crear un déficit calórico sin pasar hambre.",
+  "Por qué la fuerza es clave para verte mejor.",
+  "Cuánta proteína priorizar en tu día a día.",
+  "Cómo organizar hábitos simples para dejar de improvisar.",
+];
+
+const faqs = [
+  {
+    q: "¿El PDF es gratis?",
+    a: "Sí. Te lo envío gratis al correo. Sin coste, sin trampa.",
+  },
+  {
+    q: "¿Necesito experiencia previa en gym o dietas?",
+    a: "No. Está pensado para que lo entiendas aunque empieces desde cero.",
+  },
+  {
+    q: "¿Tengo que hacer una dieta estricta?",
+    a: "No. La idea es darte estructura sin vivir restringido.",
+  },
+];
+
 const scrollTo = (id) =>
   document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
 
@@ -47,6 +71,7 @@ const Home = () => {
   const [loading, setLoading]     = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError]         = useState('');
+  const [openFaq, setOpenFaq]     = useState(null);
 
   const handleEmailSubmit = async (e, source = 'main_form') => {
     e.preventDefault();
@@ -152,6 +177,35 @@ const Home = () => {
         </div>
       </section>
 
+      {/* ── LEARN POINTS ── */}
+      <section className="learn-section">
+        <h2 className="learn-title">Qué vas a aprender dentro</h2>
+        <ul className="learn-list">
+          {learnPoints.map((p, i) => (
+            <li className="learn-item" key={i}>
+              <span className="learn-dot" />
+              {p}
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      {/* ── NO SMOKE ── */}
+      <section className="nosmoke-section">
+        <div className="nosmoke-card">
+          <p className="nosmoke-label">Sin humo fitness</p>
+          <p className="nosmoke-text">
+            No es una dieta extrema, no es un reto milagroso y no promete resultados absurdos.
+            Es una base simple para empezar con estructura: comida, fuerza, sueño y hábitos.
+          </p>
+        </div>
+      </section>
+
+      {/* ── PRE-FORM MICROCOPY ── */}
+      <p className="pre-form-microcopy">
+        Gratis. Sin spam. Solo contenido útil sobre entrenamiento, nutrición y hábitos.
+      </p>
+
       {/* ── EMAIL CAPTURE ── */}
       <section className="email-capture-section" id="email-capture">
         <div className="email-capture-card">
@@ -233,8 +287,28 @@ const Home = () => {
         </div>
       </section>
 
+      {/* ── FAQ ── */}
+      <section className="faq-section">
+        <h2 className="faq-title">Preguntas frecuentes</h2>
+        <div className="faq-list">
+          {faqs.map((f, i) => (
+            <div
+              className={`faq-item${openFaq === i ? ' faq-open' : ''}`}
+              key={i}
+              onClick={() => setOpenFaq(openFaq === i ? null : i)}
+            >
+              <div className="faq-question">
+                {f.q}
+                <ChevronDown className="faq-chevron" size={16} />
+              </div>
+              {openFaq === i && <p className="faq-answer">{f.a}</p>}
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* ── FINAL CTA ── */}
-      <section className="final-cta-section-new">
+      <section className="final-cta-section-new" id="lead-form-cta">
         <div className="final-cta-content">
           <p className="final-cta-message">
             Si sigues improvisando,<br />dentro de 6 meses estarás igual.
@@ -243,6 +317,15 @@ const Home = () => {
             <ArrowRight className="btn-icon" size={18} /> ENTRAR AL SISTEMA
           </button>
         </div>
+      </section>
+
+      {/* ── SIMPLE CTA STRIP ── */}
+      <section className="strip-cta-section">
+        <h3 className="strip-cta-title">Empieza con estructura</h3>
+        <p className="strip-cta-sub">Recibe el PDF inicial de Tealor Method y deja de improvisar.</p>
+        <button className="btn-primary btn-large strip-cta-btn" onClick={() => scrollTo('email-capture')}>
+          <Download size={17} /> RECIBIR PDF GRATIS
+        </button>
       </section>
 
       {/* ── SOCIAL ── */}
