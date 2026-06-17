@@ -1,17 +1,17 @@
-import React, { useState, useEffect, useRef } from 'react';
-import {
-  Youtube,
-  Video,
-  Instagram,
-  Download,
+import React, { useState } from 'react';
+import { 
+  Youtube, 
+  Video, 
+  Instagram, 
+  Download, 
+  Flame, 
   CheckCircle2,
   Mail,
   ArrowRight,
-  Zap,
-  Brain,
-  Shield,
-  Dumbbell,
-  ChevronDown,
+  Target,
+  Activity,
+  TrendingUp,
+  Zap
 } from 'lucide-react';
 import axios from 'axios';
 
@@ -19,94 +19,36 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
 const profileData = {
+  name: "Tealor Mode",
   avatar: "https://customer-assets.emergentagent.com/job_bio-link-fitness/artifacts/7toccjzq_ChatGPT%20Image%2017%20abr%202026%2C%2013_14_49.png",
 };
 
 const socialLinks = [
-  { id: 1, platform: "YouTube",   url: "https://www.youtube.com/@TealorMode",                          icon: Youtube   },
-  { id: 2, platform: "TikTok",    url: "https://www.tiktok.com/@tealormode",                           icon: Video     },
-  { id: 3, platform: "Instagram", url: "https://www.instagram.com/tealormode?igsh=Z2x0MHd0aDIwejds", icon: Instagram },
+  {
+    id: 1,
+    platform: "YouTube",
+    url: "https://www.youtube.com/@TealorMode",
+    icon: Youtube
+  },
+  {
+    id: 2,
+    platform: "TikTok",
+    url: "https://www.tiktok.com/@tealormode",
+    icon: Video
+  },
+  {
+    id: 3,
+    platform: "Instagram",
+    url: "https://www.instagram.com/tealormode?igsh=Z2x0MHd0aDIwejds",
+    icon: Instagram
+  }
 ];
-
-const pillars = [
-  {
-    icon: Dumbbell,
-    label: "Cuerpo",
-    desc: "Construye un físico que refleje tu disciplina. Protocolos basados en evidencia, sin trucos ni atajos.",
-  },
-  {
-    icon: Brain,
-    label: "Mente",
-    desc: "El rendimiento físico empieza en el cerebro. Claridad mental, foco y resiliencia como pilares del progreso.",
-  },
-  {
-    icon: Shield,
-    label: "Disciplina",
-    desc: "La motivación desaparece. La disciplina permanece. Aquí construyes sistemas, no depender del estado de ánimo.",
-  },
-];
-
-/* Particle canvas background */
-function ParticleField() {
-  const canvasRef = useRef(null);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    let animId;
-    let particles = [];
-
-    const resize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    };
-    resize();
-    window.addEventListener('resize', resize);
-
-    for (let i = 0; i < 60; i++) {
-      particles.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        r: Math.random() * 1.5 + 0.3,
-        vx: (Math.random() - 0.5) * 0.3,
-        vy: (Math.random() - 0.5) * 0.3,
-        alpha: Math.random() * 0.5 + 0.1,
-      });
-    }
-
-    const draw = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      particles.forEach((p) => {
-        p.x += p.vx;
-        p.y += p.vy;
-        if (p.x < 0) p.x = canvas.width;
-        if (p.x > canvas.width) p.x = 0;
-        if (p.y < 0) p.y = canvas.height;
-        if (p.y > canvas.height) p.y = 0;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(0, 230, 200, ${p.alpha})`;
-        ctx.fill();
-      });
-      animId = requestAnimationFrame(draw);
-    };
-    draw();
-
-    return () => {
-      window.removeEventListener('resize', resize);
-      cancelAnimationFrame(animId);
-    };
-  }, []);
-
-  return <canvas ref={canvasRef} className="particle-canvas" />;
-}
 
 const Home = () => {
-  const [email, setEmail]         = useState('');
-  const [loading, setLoading]     = useState(false);
+  const [email, setEmail] = useState('');
+  const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  const [error, setError]         = useState('');
+  const [error, setError] = useState('');
 
   const handleEmailSubmit = async (e, source = 'main_form') => {
     e.preventDefault();
@@ -114,23 +56,30 @@ const Home = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post(`${API}/email/capture`, { email, source });
+      // Capture email
+      const response = await axios.post(`${API}/email/capture`, {
+        email: email,
+        source: source
+      });
 
       if (response.data.success) {
         setSubmitted(true);
-
+        
+        // Track analytics
         await axios.post(`${API}/analytics/click`, {
           button_type: 'email_capture',
-          button_name: source,
+          button_name: source
         });
 
+        // Mark as downloaded
         await axios.post(`${API}/email/mark-downloaded/${email}`);
 
+        // Trigger PDF download
         window.open(`${API}/download/protocolo-abs`, '_blank');
       }
     } catch (err) {
       console.error('Error:', err);
-      setError('Algo salió mal. Por favor, inténtalo de nuevo.');
+      setError('Error al procesar tu solicitud. Por favor, intenta de nuevo.');
     } finally {
       setLoading(false);
     }
@@ -140,40 +89,49 @@ const Home = () => {
     try {
       await axios.post(`${API}/analytics/click`, {
         button_type: 'social',
-        button_name: platform.toLowerCase(),
+        button_name: platform.toLowerCase()
       });
-    } catch (_) {}
+    } catch (error) {
+      console.error('Error tracking click:', error);
+    }
   };
-
-  const scrollTo = (id) =>
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
 
   if (submitted) {
     return (
-      <div className="tm-root">
-        <div className="ty-wrap">
-          <div className="ty-icon"><CheckCircle2 size={36} /></div>
-          <h1 className="ty-title">Ya tienes acceso.</h1>
-          <p className="ty-text">
-            Tu PDF se está descargando ahora.{' '}
-            <span className="ty-link" onClick={() => window.open(`${API}/download/protocolo-abs`, '_blank')}>
-              Haz clic aquí si no arranca.
-            </span>
-            <br /><br />
-            Bienvenido al sistema. Ahora toca aplicarlo.
+      <div className="landing-container">
+        <div className="thank-you-section">
+          <div className="thank-you-icon">
+            <CheckCircle2 size={64} />
+          </div>
+          <h1 className="thank-you-title">¡Bienvenido al sistema!</h1>
+          <p className="thank-you-text">
+            Tu descarga comenzará en unos segundos.
+            <br />
+            Revisa tu email para recibir contenido exclusivo.
           </p>
-          <button className="tm-btn-primary" onClick={() => setSubmitted(false)}>
+          <button 
+            className="btn-primary btn-medium"
+            onClick={() => window.location.reload()}
+          >
             Volver al inicio
           </button>
-          <div className="ty-social">
-            <p className="ty-social-label">Sígueme en redes</p>
-            <div className="ty-social-icons">
-              {socialLinks.map((l) => {
-                const Icon = l.icon;
+
+          {/* Social Links */}
+          <div className="social-links-thank-you">
+            <p className="social-heading">Sígueme en redes</p>
+            <div className="social-icons">
+              {socialLinks.map((link) => {
+                const IconComponent = link.icon;
                 return (
-                  <a key={l.id} href={l.url} target="_blank" rel="noopener noreferrer"
-                     className="ty-social-btn" onClick={() => handleSocialClick(l.platform)}>
-                    <Icon size={20} />
+                  <a
+                    key={link.id}
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="social-icon-link"
+                    onClick={() => handleSocialClick(link.platform)}
+                  >
+                    <IconComponent size={24} />
                   </a>
                 );
               })}
@@ -185,206 +143,241 @@ const Home = () => {
   }
 
   return (
-    <div className="tm-root">
+    <div className="landing-container">
+      
+      {/* Logo/Brand Header */}
+      <header className="brand-header">
+        <img src={profileData.avatar} alt="Tealor Mode" className="brand-logo" />
+      </header>
 
-      {/* ── HERO ──────────────────────────────────────── */}
-      <section className="tm-hero">
-        <ParticleField />
-
-        {/* nav bar */}
-        <nav className="tm-nav">
-          <img src={profileData.avatar} alt="Tealor Mode" className="tm-nav-logo" />
-          <span className="tm-nav-brand">Tealor Mode</span>
-          <button className="tm-btn-outline tm-nav-cta" onClick={() => scrollTo('email-capture')}>
-            Unirse
-          </button>
-        </nav>
-
-        <div className="tm-hero-content">
-          <span className="tm-eyebrow">
-            <Zap size={12} /> Sistema de transformación física y mental
-          </span>
-
-          <h1 className="tm-hero-title">
-            Enter<br /><span className="tm-accent">Tealor Mode</span>
-          </h1>
-
-          <p className="tm-hero-sub">
-            Activa tu mejor versión física y mental.
-          </p>
-
-          <div className="tm-hero-ctas">
-            <button className="tm-btn-primary tm-btn-lg" onClick={() => scrollTo('email-capture')}>
-              <Zap size={16} /> Entrar en modo Tealor
-            </button>
-            <button className="tm-btn-ghost tm-btn-lg" onClick={() => scrollTo('metodo')}>
-              Ver el método <ChevronDown size={16} />
-            </button>
-          </div>
-        </div>
-
-        <div className="tm-hero-scroll-hint" onClick={() => scrollTo('metodo')}>
-          <ChevronDown size={20} />
-        </div>
+      {/* Hero Section */}
+      <section className="hero-section-new">
+        <h1 className="hero-title-new hero-title-elegant">
+          Tealor Method
+        </h1>
+        <p className="hero-subtitle-new">
+          Sin cardio absurdo. Sin dietas extremas. Basado en ciencia.
+        </p>
+        <button 
+          className="btn-primary btn-large"
+          onClick={() => document.getElementById('email-capture').scrollIntoView({ behavior: 'smooth' })}
+        >
+          <Flame className="btn-icon" />
+          Acceder al sistema
+        </button>
       </section>
 
-      {/* ── QUÉ ES TEALOR MODE ──────────────────────── */}
-      <section className="tm-section tm-what" id="metodo">
-        <div className="tm-container">
-          <span className="tm-section-eyebrow">El movimiento</span>
-          <h2 className="tm-section-title">
-            Tealor Mode no es fitness<br />tradicional.
+      {/* Email Capture Section - MAIN CTA */}
+      <section className="email-capture-section" id="email-capture">
+        <div className="email-capture-card">
+          <h2 className="email-capture-title">
+            Accede al sistema que realmente funciona
           </h2>
-          <p className="tm-what-text">
-            Es un sistema completo de mejora física y mental. Sin dietas de moda,
-            sin cardio inútil, sin motivación vacía. Solo protocolos que funcionan
-            —respaldados por evidencia, diseñados para durar.
+          <p className="email-capture-subtitle">
+            Aprende cómo eliminar grasa sin complicarte ni perder tiempo
           </p>
-          <p className="tm-what-text">
-            Una comunidad, una metodología, un modo de vida.
-          </p>
-        </div>
-      </section>
 
-      {/* ── 3 PILARES ───────────────────────────────── */}
-      <section className="tm-section tm-pillars">
-        <div className="tm-container">
-          <span className="tm-section-eyebrow">Los pilares</span>
-          <h2 className="tm-section-title">Todo empieza aquí.</h2>
-          <div className="tm-pillars-grid">
-            {pillars.map((p, i) => {
-              const Icon = p.icon;
-              return (
-                <div className="tm-pillar-card" key={i}>
-                  <div className="tm-pillar-icon">
-                    <Icon size={28} />
-                  </div>
-                  <h3 className="tm-pillar-title">{p.label}</h3>
-                  <p className="tm-pillar-desc">{p.desc}</p>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
+          {error && <p className="error-message">{error}</p>}
 
-      {/* ── NO ES MOTIVACIÓN ────────────────────────── */}
-      <section className="tm-section tm-manifesto">
-        <div className="tm-container tm-manifesto-inner">
-          <div className="tm-manifesto-line" />
-          <p className="tm-manifesto-quote">
-            No es motivación.<br />
-            <span className="tm-accent">Es sistema.</span>
-          </p>
-          <p className="tm-manifesto-sub">
-            La motivación llega y se va. Un sistema te hace progresar
-            incluso los días que no tienes ganas.
-            Tealor Mode te da la estructura.
-          </p>
-          <div className="tm-manifesto-line" />
-        </div>
-      </section>
-
-      {/* ── LEAD MAGNET / EMAIL CAPTURE ─────────────── */}
-      <section className="tm-section tm-capture" id="email-capture">
-        <div className="tm-container">
-          <div className="tm-capture-card">
-            <span className="tm-capture-badge">
-              <Download size={12} /> PDF Gratuito
-            </span>
-            <h2 className="tm-capture-title">
-              Protocolo ABS<br />Guía de Recomposición Corporal
-            </h2>
-            <p className="tm-capture-sub">
-              Deja tu email. Accede al sistema en segundos.
-            </p>
-            <ul className="tm-capture-bullets">
-              <li><span className="tm-bullet-dot" /> Los 3 principios que determinan el 80% de tu progreso</li>
-              <li><span className="tm-bullet-dot" /> El protocolo semanal exacto para ver cambios reales</li>
-              <li><span className="tm-bullet-dot" /> Los errores que sabotean tu transformación (y cómo evitarlos)</li>
-            </ul>
-
-            {error && <p className="tm-error">{error}</p>}
-
-            <form onSubmit={(e) => handleEmailSubmit(e, 'main_form')} className="tm-form">
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="tu@email.com"
-                className="tm-input"
-                required
-                disabled={loading}
-                aria-label="Tu dirección de email"
-              />
-              <button type="submit" className="tm-btn-primary tm-btn-lg" disabled={loading}>
-                {loading ? 'Procesando…' : <><Mail size={16} /> Quiero mi guía gratis</>}
-              </button>
-            </form>
-
-            <p className="tm-trust">
-              <CheckCircle2 size={14} /> Sin spam. Solo lo que funciona.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* ── FINAL CTA ───────────────────────────────── */}
-      <section className="tm-section tm-final">
-        <div className="tm-container">
-          <div className="tm-final-card">
-            <h2 className="tm-final-title">
-              ¿Dentro de 6 meses seguirás igual<br />—o habrás cambiado?
-            </h2>
-            <p className="tm-final-sub">
-              El sistema es gratuito. El primer paso eres tú.
-            </p>
-            <button className="tm-btn-primary tm-btn-lg" onClick={() => scrollTo('email-capture')}>
-              <ArrowRight size={16} /> Empezar ahora, es gratis
+          <form onSubmit={(e) => handleEmailSubmit(e, 'main_form')} className="email-form">
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Tu email"
+              className="email-input"
+              required
+              disabled={loading}
+            />
+            <button 
+              type="submit" 
+              className="btn-primary btn-large"
+              disabled={loading}
+            >
+              {loading ? (
+                'Procesando...'
+              ) : (
+                <>
+                  <Mail className="btn-icon" />
+                  Empezar ahora
+                </>
+              )}
             </button>
+          </form>
+
+          <p className="trust-message">
+            <CheckCircle2 size={16} />
+            Sin spam. Solo contenido útil.
+          </p>
+        </div>
+      </section>
+
+      {/* What You Get Section */}
+      <section className="value-section">
+        <h2 className="section-title">No es genética, es sistema</h2>
+        <div className="value-grid">
+          <div className="value-card">
+            <div className="value-icon">
+              <Download size={32} />
+            </div>
+            <h3 className="value-card-title">PDF: fundamentos reales</h3>
+            <p className="value-card-text">
+              Los principios científicos de pérdida de grasa que realmente funcionan
+            </p>
+          </div>
+
+          <div className="value-card">
+            <div className="value-icon">
+              <Target size={32} />
+            </div>
+            <h3 className="value-card-title">Sistema paso a paso</h3>
+            <p className="value-card-text">
+              Estructura clara y simple para aplicar desde el día 1
+            </p>
+          </div>
+
+          <div className="value-card">
+            <div className="value-icon">
+              <Zap size={32} />
+            </div>
+            <h3 className="value-card-title">Errores que te bloquean</h3>
+            <p className="value-card-text">
+              Los fallos más comunes que impiden ver resultados reales
+            </p>
+          </div>
+
+          <div className="value-card">
+            <div className="value-icon">
+              <Activity size={32} />
+            </div>
+            <h3 className="value-card-title">Estructura semanal</h3>
+            <p className="value-card-text">
+              Plan simple y consistente para seguir sin agobiarte
+            </p>
           </div>
         </div>
       </section>
 
-      {/* ── SOCIAL ──────────────────────────────────── */}
-      <section className="tm-section tm-social-section">
-        <div className="tm-container">
-          <p className="tm-social-label">Contenido diario en redes</p>
-          <div className="tm-social-btns">
-            {socialLinks.map((l) => {
-              const Icon = l.icon;
-              return (
-                <a key={l.id} href={l.url} target="_blank" rel="noopener noreferrer"
-                   className="tm-social-link" onClick={() => handleSocialClick(l.platform)}>
-                  <Icon size={18} /> {l.platform}
-                </a>
-              );
-            })}
+      {/* Brand Positioning Section */}
+      <section className="positioning-section">
+        <div className="positioning-content">
+          <h2 className="positioning-title">
+            Tealor Mode no es fitness tradicional
+          </h2>
+          <p className="positioning-text">
+            Es un sistema basado en datos, consistencia y decisiones correctas.
+          </p>
+          <p className="positioning-text">
+            Sin ruido. Sin promesas vacías. Solo resultados medibles.
+          </p>
+        </div>
+      </section>
+
+      {/* Protocol/System Section */}
+      <section className="protocol-section">
+        <h2 className="section-title">El sistema en 4 pasos</h2>
+        <div className="protocol-steps">
+          <div className="protocol-step">
+            <div className="step-number">01</div>
+            <h3 className="step-title">Diagnóstico</h3>
+            <p className="step-text">
+              Entiende qué estás haciendo mal
+            </p>
+          </div>
+
+          <div className="protocol-step">
+            <div className="step-number">02</div>
+            <h3 className="step-title">Ajuste</h3>
+            <p className="step-text">
+              Configura lo mínimo necesario
+            </p>
+          </div>
+
+          <div className="protocol-step">
+            <div className="step-number">03</div>
+            <h3 className="step-title">Ejecución</h3>
+            <p className="step-text">
+              Aplica sin complicarte
+            </p>
+          </div>
+
+          <div className="protocol-step">
+            <div className="step-number">04</div>
+            <h3 className="step-title">Optimización</h3>
+            <p className="step-text">
+              Ajusta según resultados
+            </p>
           </div>
         </div>
       </section>
 
-      {/* ── FOOTER ──────────────────────────────────── */}
-      <footer className="tm-footer">
-        <div className="tm-footer-inner">
-          <div>
-            <p className="tm-footer-brand">Tealor Mode</p>
-            <p className="tm-footer-tagline">Sistema basado en ciencia</p>
+      {/* Final CTA Section */}
+      <section className="final-cta-section-new">
+        <div className="final-cta-content">
+          <p className="final-cta-message">
+            Si no entiendes esto, seguirás igual dentro de 6 meses
+          </p>
+          <button 
+            className="btn-primary btn-large"
+            onClick={() => document.getElementById('email-capture').scrollIntoView({ behavior: 'smooth' })}
+          >
+            <ArrowRight className="btn-icon" />
+            Entrar al sistema
+          </button>
+        </div>
+      </section>
+
+      {/* Social Media Section */}
+      <section className="social-section">
+        <p className="social-section-title">Contenido diario en redes</p>
+        <div className="social-buttons">
+          {socialLinks.map((link) => {
+            const IconComponent = link.icon;
+            return (
+              <a
+                key={link.id}
+                href={link.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="social-btn"
+                onClick={() => handleSocialClick(link.platform)}
+              >
+                <IconComponent size={20} />
+                {link.platform}
+              </a>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* Professional Footer */}
+      <footer className="footer-professional">
+        <div className="footer-content">
+          <div className="footer-brand">
+            <p className="footer-brand-name">Tealor Method</p>
+            <p className="footer-tagline">Sistema basado en ciencia</p>
           </div>
-          <div>
-            <p className="tm-footer-label">Contacto</p>
-            <a href="mailto:info@tealormode.com" className="tm-footer-email">info@tealormode.com</a>
+
+          <div className="footer-contact">
+            <p className="footer-section-title">Contacto</p>
+            <a href="mailto:info@tealormode.com" className="footer-email">
+              info@tealormode.com
+            </a>
           </div>
-          <div>
-            <p className="tm-footer-label">Colaboraciones</p>
-            <p className="tm-footer-collab">Para propuestas comerciales, escríbenos al correo.</p>
+
+          <div className="footer-collab">
+            <p className="footer-section-title">Colaboraciones y marcas</p>
+            <p className="footer-collab-text">
+              Para colaboraciones o propuestas comerciales,
+              contáctanos en el correo
+            </p>
           </div>
         </div>
-        <div className="tm-footer-bottom">
-          <p>© 2026 Tealor Mode. Todos los derechos reservados.</p>
+
+        <div className="footer-bottom">
+          <p>© 2026 Tealor Method. Todos los derechos reservados.</p>
         </div>
       </footer>
-
     </div>
   );
 };
